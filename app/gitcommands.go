@@ -25,9 +25,9 @@ import (
 
 // BranchInformation contains data about a branch
 type BranchInformation struct {
-	Key     string
-	Value   string
-	Enabled bool
+	Key     string `json:"key"`
+	Value   string `json:"value"`
+	Enabled bool   `json:"enabled"`
 }
 
 // GetBranches connects to remote git repo and returns all branches
