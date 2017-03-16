@@ -15,8 +15,14 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
+	"net/http"
 
+	"os"
+
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
+	"github.com/sascha-andres/gitbranch/app"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -27,8 +33,18 @@ var serveCmd = &cobra.Command{
 	Short: "Start rest api",
 	Long:  `Fire up a webserver and answer requests`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("serve called")
+		r := mux.NewRouter()
+		if "" == viper.GetString("serve.secret") {
+			r.HandleFunc("/api/branches", app.BranchHandler).
+				Methods("POST")
+		} else {
+			r.HandleFunc("/api/branches", app.BranchHandler).
+				Methods("POST").Headers("X-BranchSecret", viper.GetString("serve.secret"))
+		}
+		r.Headers("Content-Type", "application/json")
+		if err := http.ListenAndServe(viper.GetString("serve.listen"), handlers.LoggingHandler(os.Stdout, r)); err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 
@@ -36,5 +52,7 @@ func init() {
 	RootCmd.AddCommand(serveCmd)
 
 	serveCmd.Flags().StringP("listen", "l", ":8080", "Provide binding definition")
+	serveCmd.Flags().StringP("secret", "s", "", "Provide a secret that has to be sent with X-BranchSecret")
 	viper.BindPFlag("serve.listen", serveCmd.Flags().Lookup("listen"))
+	viper.BindPFlag("serve.secret", serveCmd.Flags().Lookup("secret"))
 }
