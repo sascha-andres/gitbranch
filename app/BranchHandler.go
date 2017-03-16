@@ -22,15 +22,18 @@ import (
 )
 
 type (
+	// BranchResult represents a successful answer for a request
 	BranchResult struct {
 		Options []BranchInformation `json:"options"`
 	}
 
+	// BranchRequest represents the payload we ask for
 	BranchRequest struct {
 		Repository string `json:"repository"`
 	}
 )
 
+// BranchHandler is the http.HandlerFunc for a branch list request
 func BranchHandler(w http.ResponseWriter, r *http.Request) {
 	var request BranchRequest
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -41,24 +44,25 @@ func BranchHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	if err := json.Unmarshal(body, &request); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(422) // unprocessable entity
-		if err := json.NewEncoder(w).Encode(err); err != nil {
-			panic(err)
-		}
+		handleError(w, err)
 		return
 	}
 
 	branches, err := GetBranches(request.Repository)
 	if err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(422) // unprocessable entity
-		if err := json.NewEncoder(w).Encode(err); err != nil {
-			panic(err)
-		}
+		handleError(w, err)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(BranchResult{Options: branches})
+}
+
+func handleError(w http.ResponseWriter, err error) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(422) // unprocessable entity
+	if err := json.NewEncoder(w).Encode(err); err != nil {
+		panic(err)
+	}
 }
