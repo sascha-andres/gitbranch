@@ -29,6 +29,7 @@ type BranchInformation struct {
 	Key     string `json:"key"`
 	Value   string `json:"value"`
 	Enabled bool   `json:"enabled"`
+	Image   string `json:"image"`
 }
 
 // GetBranches connects to remote git repo and returns all branches
@@ -55,7 +56,7 @@ func GetBranches(remoteRepository string) ([]BranchInformation, error) {
 
 	for _, branch := range branches {
 		if !strings.HasSuffix(branch, "^{}") {
-			result = append(result, BranchInformation{Enabled: true, Key: branch, Value: branch})
+			result = append(result, BranchInformation{Enabled: true, Key: branch, Value: branch, Image: "https://raw.githubusercontent.com/sascha-andres/gitbranch/develop/icons/branch.svg"})
 		}
 	}
 
@@ -65,7 +66,7 @@ func GetBranches(remoteRepository string) ([]BranchInformation, error) {
 
 	for _, branch := range branches {
 		if !strings.HasSuffix(branch, "^{}") {
-			result = append(result, BranchInformation{Enabled: true, Key: branch, Value: branch})
+			result = append(result, BranchInformation{Enabled: true, Key: branch, Value: branch, Image: "https://raw.githubusercontent.com/sascha-andres/gitbranch/develop/icons/bookmark.svg"})
 		}
 	}
 
