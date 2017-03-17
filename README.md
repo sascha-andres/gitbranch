@@ -44,6 +44,16 @@ Result will look like this:
 
 The service is thought to be used in conjunction with https://github.com/grundic/teamcity-web-parameters
 
+## How to start
+
+    gitbranch server --listen ":8080"
+
 ## Credits
 
 Images from https://www.shareicon.net/author/hub
+
+## History
+
+|Version|Description|
+|---|---|
+|v1.0.0|Initial version|
