@@ -19,6 +19,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"regexp"
 )
 
 type (
@@ -33,6 +34,8 @@ type (
 	}
 )
 
+var testRegex = regexp.MustCompile("[a-z@-_:/\\.]+git$")
+
 // BranchHandler is the http.HandlerFunc for a branch list request
 func BranchHandler(w http.ResponseWriter, r *http.Request) {
 	var request BranchRequest
@@ -45,6 +48,11 @@ func BranchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if err := json.Unmarshal(body, &request); err != nil {
 		handleError(w, err)
+		return
+	}
+
+	if !testRegex.MatchString(request.Repository) {
+		w.WriteHeader(500)
 		return
 	}
 
