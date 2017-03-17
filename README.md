@@ -43,3 +43,7 @@ Result will look like this:
     }
 
 The service is thought to be used in conjunction with https://github.com/grundic/teamcity-web-parameters
+
+## Credits
+
+Images from https://www.shareicon.net/author/hub

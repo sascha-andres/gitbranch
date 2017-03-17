@@ -21,6 +21,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 // BranchInformation contains data about a branch
@@ -53,7 +54,19 @@ func GetBranches(remoteRepository string) ([]BranchInformation, error) {
 	var result []BranchInformation
 
 	for _, branch := range branches {
-		result = append(result, BranchInformation{Enabled: true, Key: branch, Value: branch})
+		if !strings.HasSuffix(branch, "^{}") {
+			result = append(result, BranchInformation{Enabled: true, Key: branch, Value: branch})
+		}
+	}
+
+	if branches, err = execCommand("git ls-remote | awk '{print $2}' | grep refs/tags | cut -c 11-", dir); err != nil {
+		return nil, err
+	}
+
+	for _, branch := range branches {
+		if !strings.HasSuffix(branch, "^{}") {
+			result = append(result, BranchInformation{Enabled: true, Key: branch, Value: branch})
+		}
 	}
 
 	return result, nil
