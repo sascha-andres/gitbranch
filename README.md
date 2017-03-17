@@ -24,19 +24,22 @@ Result will look like this:
           {
               "key": "master",
               "value": "master",
-              "enabled": true
+              "enabled": true,
+              "image": "..."
           },
           {
               "key": "develop",
               "value": "develop",
-              "enabled": true
+              "enabled": true,
+              "image": "..."
           },
           {
               "key": "feature/a",
               "value": "feature/a",
-              "enabled": true
+              "enabled": true,
+              "image": "..."
           }
       ]
     }
-    
-git ls-remote | awk '{print $2}' | grep refs/heads | cut -c 12-
+
+The service is thought to be used in conjunction with https://github.com/grundic/teamcity-web-parameters
