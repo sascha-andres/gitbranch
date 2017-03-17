@@ -9,5 +9,6 @@ RUN apt update && \
 ADD gitbranch /gitbranch
 ADD scripts/startup.sh /startup.sh
 
-CMD [ "serve" ]
+VOLUME /config
+
 ENTRYPOINT [ "/startup.sh" ]
