@@ -1,0 +1,20 @@
+docker:
+  deps:
+  - build
+  - version
+  cmds:
+  - docker build -t briefbote/gitbranch:latest .
+  - docker tag briefbote/gitbranch:latest briefbote/gitbranch:$GITBRANCH_VERSION
+  - docker push briefbote/gitbranch:latest
+  - docker push briefbote/gitbranch:$GITBRANCH_VERSION
+  - docker rmi briefbote/gitbranch:$GITBRANCH_VERSION
+  - docker rmi briefbote/gitbranch:latest
+
+version:
+  cmds:
+  - cat .version
+  set: GITBRANCH_VERSION
+
+build:
+  cmds:
+  - CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-s'

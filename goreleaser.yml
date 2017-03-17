@@ -1,0 +1,6 @@
+build:
+  binary_name: gitbranch
+  goos:
+    - linux
+  goarch:
+    - amd64
