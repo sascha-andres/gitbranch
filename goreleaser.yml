@@ -1,5 +1,5 @@
 build:
-  binary_name: gitbranch
+  binary: gitbranch
   goos:
     - linux
   goarch:
